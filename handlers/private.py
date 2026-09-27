@@ -127,7 +127,8 @@ async def show_deals(message: Message):
     await message.answer("🔍 Ищу актуальные скидки...")
     
     settings = await get_chat_settings(message.chat.id)
-    deals = await get_top_steam_deals(min_discount=settings["min_discount"], max_pages=3)
+    # Принудительно устанавливаем min_discount=0, чтобы гарантированно получать список
+    deals = await get_top_steam_deals(min_discount=0, max_pages=3)
     
     if not deals:
         await message.answer("К сожалению, скидок не найдено.")
@@ -144,7 +145,7 @@ async def show_deals(message: Message):
 @router.message(F.text == "🎲 Случайная скидка")
 async def show_random_deal(message: Message):
     settings = await get_chat_settings(message.chat.id)
-    deals = await get_top_steam_deals(min_discount=settings["min_discount"], max_pages=3)
+    deals = await get_top_steam_deals(min_discount=0, max_pages=3)
     
     if not deals:
         await message.answer("Не удалось найти скидки.")
