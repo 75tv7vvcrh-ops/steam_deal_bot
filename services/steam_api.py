@@ -4,7 +4,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-async def get_top_steam_deals(min_discount: int = 30, max_pages: int = 3):
+async def get_top_steam_deals(min_discount: int = 10, max_pages: int = 3):
     url = "https://www.cheapshark.com/api/1.0/deals"
     deals = []
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
