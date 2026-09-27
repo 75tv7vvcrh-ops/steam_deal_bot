@@ -4,6 +4,7 @@ import os
 from aiogram import Bot, Dispatcher
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dotenv import load_dotenv
+from aiohttp import web
 
 from database.db import init_db
 from handlers.private import router as private_router
@@ -13,7 +14,23 @@ from services.scheduler import send_daily_digest
 # Загружаем переменные окружения из файла .env
 load_dotenv()
 
-API_TOKEN = os.getenv("BOT_TOKEN")  # Убедись, что в твоем .env файле переменная называется BOT_TOKEN
+API_TOKEN = os.getenv("BOT_TOKEN")
+
+# Простейший веб-сервер для того, чтобы Render видел открытый порт
+async def handle_ping(request):
+    return web.Response(text="Bot is running!")
+
+async def start_web_server():
+    app = web.Application()
+    app.router.add_get("/", handle_ping)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    
+    # Render передает свой порт через переменную окружения PORT, по умолчанию берем 10000
+    port = int(os.environ.get("PORT", 10000))
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+    logging.getLogger(__name__).info(f"Веб-сервер запущен на порту {port}")
 
 async def main():
     logging.basicConfig(
@@ -23,7 +40,7 @@ async def main():
     logger = logging.getLogger(__name__)
     
     if not API_TOKEN:
-        logger.error("Не найден токен бота! Проверь файл .env (переменная BOT_TOKEN).")
+        logger.error("Не найден токен бота! Проверь переменные окружения (BOT_TOKEN).")
         return
 
     logger.info("Запуск Telegram-бота...")
@@ -52,6 +69,9 @@ async def main():
     scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
     scheduler.add_job(send_daily_digest, "interval", minutes=1, args=(bot,))
     scheduler.start()
+
+    # Запускаем веб-сервер для Render, чтобы он не закрывал деплой из-за порта
+    await start_web_server()
 
     # Пропуск накопившихся апдейтов и старт поллинга
     await bot.delete_webhook(drop_pending_updates=True)
