@@ -43,14 +43,13 @@ async def get_top_steam_deals(min_discount: int = 10, max_pages: int = 3):
 
             try:
                 async with session.get(url, params=params, timeout=10) as response:
-                    logger.info("CheapShark URL: %s", response.url)
                     if response.status != 200:
                         error_text = await response.text()
+                        if response.status != 200:
                         logger.error(
-                            "CheapShark вернул HTTP %s для страницы %s: %s",
+                            "CheapShark вернул HTTP %s для страницы %s",
                             response.status,
-                            page,
-                            error_text
+                            page
                         )
                         break
                     try:
@@ -83,7 +82,6 @@ async def search_deals_by_title(title: str, limit: int = 10):
     async with aiohttp.ClientSession(headers=HEADERS) as session:
         try:
             async with session.get(url, params=params, timeout=10) as response:
-                logger.info("CheapShark URL: %s", response.url)
                 if response.status != 200:
                     logger.error(
                         "CheapShark вернул HTTP %s при поиске '%s'",
