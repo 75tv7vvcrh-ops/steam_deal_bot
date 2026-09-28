@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    "User-Agent": "SteamDealBot/1.0 (Telegram Steam Deal Bot)"
 }
 
 def format_deal(item: dict) -> dict:
