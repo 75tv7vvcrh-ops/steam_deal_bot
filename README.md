@@ -72,13 +72,11 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Create a `.env` file and add the required configuration:
+Create a `.env` file and add your bot token:
 
 ```env
 BOT_TOKEN=your_bot_token
 ```
-
-Add any other environment variables required by the project.
 
 ## ▶️ Run
 
