@@ -37,7 +37,6 @@ async def get_top_steam_deals(min_discount: int = 10, max_pages: int = 3):
             params = {
                 "storeID": "1",
                 "sortBy": "Deal Rating",
-                "onSale": "1",
                 "pageSize": "60",
                 "pageNumber": str(page)
             }
