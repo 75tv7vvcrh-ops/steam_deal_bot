@@ -43,9 +43,7 @@ async def get_top_steam_deals(min_discount: int = 10, max_pages: int = 3):
 
             try:
                 async with session.get(url, params=params, timeout=10) as response:
-                    if response.status != 200:
-                        error_text = await response.text()
-                        if response.status != 200:
+                   if response.status != 200:
                         logger.error(
                             "CheapShark вернул HTTP %s для страницы %s",
                             response.status,
